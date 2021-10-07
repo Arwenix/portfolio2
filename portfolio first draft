@@ -1,17 +1,100 @@
 
-add to our loop:
+### Reading Experiment ###
+## Portfolio 2 ##
+# 
+# 07-10-2021
+
+
+# Load relevant packages
+from psychopy import core, visual, event, gui, data
+
+#Import relevant packages
+import glob  #Import package that can group filename from a folder (like list.files in R)
+import random #import package to randomize stimuli
+import pandas as pd  #import package that enable dataframes
+
+#Defining columns for dataframe
+cols = ["participant ID", "Age", "Gender",  "ReactionTime", "Word", "Word_Length", "timestamp" ]
+#define empty dataframe
+logfile = pd.DataFrame(columns = cols)
+
+
+# DEfining gui 
+dialog = gui.Dlg (title = "The love story experiment")
+dialog.addField("participant ID:")
+dialog.addField("Age:")
+dialog.addField("Gender:", choices = ["female", "male", "other"]) #making a drop down menu
+dialog.show()
+if dialog.OK: 
+    ID = dialog.data[0]
+    Age = dialog.data[1]
+    Gender = dialog.data[2]
+elif dialog.Cancel:
+    core.quit
+print(ID,Age,Gender)
+
+
+#Defining window
+win = visual.Window(color = "black", fullscr = True)
+
+#Defining text and splitting it
+story = "She was drowning herself with his memories. She remembered the day they started talking like casual friends, the day he proposed to her, her first ride with him on his  bike, their first day at the beach. She vividly remembered it, as if they were there yesterday. Holding hands, walking in silence and watching the waves run in between their feet, she had broken the silence saying, I want to be near you throughout my sandwich. He had looked at her lovingly, cuping her face gently between his hands and had said,  I will always be near you till my last breath."
+my_words = story.split ()
+print(my_words)
+
+instruction = '''
+Welcome to the love story experiment! \n\n
+In a moment, you will read a love story written by a hopeless romantic. 
+You will read the story word by word, your task is then to press the ‘space’ key when you have read the word to measure how long it takes for you to read a word. 
+Press the “space” key when you are ready to start the experiment...
+'''
+
+goodbye = '''
+The experiment is done. Thank you for your participation'''
+
+#defining functions - show text and wait for key press
+def msg(txt):
+    message = visual.TextStim(win, text = txt, alignText = "left", height = 0.05)
+    message.draw()
+    win.flip()
+    event.waitKeys()
+
+
+#Show instructions
+msg(instruction)
+
+
+#Experiment loop
+for word in my_words:
+    word = visual.TextStim(win, my_words)
+    word.draw()
+    win.flip()
+    stopwatch.reset() #we start recording time
+    key = event.waitKeys(keyList = ["space", "escape"]) #get reaction time
+    reaction_time = stopwatch.getTime()
+    print(reaction_time)  #get reaction time
+    if key == ["escape"]:
+        # save the logfile to harddrive if closed before finished
+        logfile.to_csv(logfile_name)
+        core.quit() 
+    elif key == ["space"]:
+        stopwatch.reset()
+
+#append data to logfile dataframe
 logfile = logfile.append({
-        "participant ID": ID,
-        "Age": Age,
-        "Gender": Gender,
-       “Word”: 
-       “Word_Length”:
-       “Word_speed”:
-       “timestamp”: 
-(....)
-        "ReactionTime": reaction_time,
-        }, ignore_index = True)
+    "Participant ID": ID,
+    "Age": Age,
+    "Gender": Gender,
+    "Word": Word, 
+    "Word_Length": Word_length,
+    "Word_speed": Word_speed,
+    "timestamp": Time,
+    "ReactionTime": reaction_time
+    }, ignore_index = True)
 
-msg = visual.TextStim(win, text = "<3 <3 <3 Thank you for participating <3 <3 <3")
-msg.draw() 
+#Goodbye message
+msg(goodbye)
 
+#Save data to harddrive
+logfile_name = "Experiment_data/logfile_{}_{}.csv".format(ID,date)
+logfile.to_csv("Experiment_data")
