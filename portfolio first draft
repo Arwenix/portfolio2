@@ -1,1 +1,17 @@
-oihafiohnfnack
+
+add to our loop:
+logfile = logfile.append({
+        "participant ID": ID,
+        "Age": Age,
+        "Gender": Gender,
+       “Word”: 
+       “Word_Length”:
+       “Word_speed”:
+       “timestamp”: 
+(....)
+        "ReactionTime": reaction_time,
+        }, ignore_index = True)
+
+msg = visual.TextStim(win, text = "<3 <3 <3 Thank you for participating <3 <3 <3")
+msg.draw() 
+
